@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.icons {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-box,
+.computer-box {
+  border: 2px solid red;
+  padding: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.icon-container {
+  display: flex;
+  gap: 10px;
+}
+
+i {
+  padding: 20px;
+  border: 3px solid green;
+}
+
+.android {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.active {
+  background-color: red;
+}
