@@ -1,118 +1,133 @@
 const computerIcons = document.querySelectorAll(".icon1");
-console.log(computerIcons);
 const playerIcons = document.querySelectorAll(".icon");
-console.log(playerIcons);
 const container = document.querySelector(".icon-container");
 const messageDisplay = document.querySelector(".message");
 const player = document.querySelector(".player");
 const computer = document.querySelector(".computer");
 const text = document.querySelector(".text");
+const resetBtn = document.querySelector(".resetBtn");
+
 let playerScore = 0;
 let computerScore = 0;
-let playerSelection = "";
-let computerSelection = "";
-//this is game javascript. I don't know how to take results from player function and computer function and put into playGame function. If i invoke getComputerChoice inside playGame function works before player choice was made. Second JS file copy.js its just example of rock, paper, scissors simple version.
-//player's clicked icon
-const getPlayerChoice = (e) => {
-  let clickedIcon = e.target.classList.value;
-  //console.log(clickedIcon);
-  if (clickedIcon.includes("fa-hand-back-fist")) {
-    playerSelection = "rock";
-  } else if (clickedIcon.includes("paper")) {
-    playerSelection = "paper";
-  } else if (clickedIcon.includes("fa-hand-scissors")) {
-    playerSelection = "scissors";
-  }
-  console.log({ playerSelection });
-  return playerSelection;
-};
-//looping through player icons and adding event listener on icon
-for (let i = 0; i < playerIcons.length; i++) {
-  playerIcons[i].addEventListener("click", getPlayerChoice);
-}
+let playerSelection;
+let computerSelection;
+let result = "";
+let userChoice = true;
 
-//removes and adds active class on player icon
+//remove active class from player
 const removeActivePlayer = () => {
-  for (const icon of playerIcons) {
-    icon.addEventListener("click", () => {
-      playerIcons.forEach((elem) => {
-        elem.classList.remove("active");
-      });
-      icon.classList.add("active");
-    });
+  playerIcons.forEach((elem) => {
+    elem.classList.remove("active");
+  });
+};
+//remove active class from computer
+const removeActiveComputer = () => {
+  computerIcons.forEach((elem) => {
+    elem.classList.remove("active");
+  });
+};
+
+const resetGame = () => {
+  removeActivePlayer();
+  removeActiveComputer();
+  messageDisplay.innerText = "Let's play again";
+  playerScore = 0;
+  computerScore = 0;
+  playerSelection;
+  computerSelection;
+  result = "";
+  userChoice = true;
+  computer.innerText = "Computer score: 0";
+  player.innerText = "Player score: 0";
+};
+
+//player's clicked icon
+const getPlayerChoice = (e, i) => {
+  if (userChoice) {
+    removeActivePlayer();
+    playerIcons[i].classList.add("active");
+
+    let clickedIcon = e.target.classList.value;
+    if (clickedIcon.includes("fa-hand-back-fist")) {
+      playerSelection = "rock";
+    } else if (clickedIcon.includes("paper")) {
+      playerSelection = "paper";
+    } else if (clickedIcon.includes("fa-hand-scissors")) {
+      playerSelection = "scissors";
+    }
+    console.log({ playerSelection });
+    compareScores(playerSelection, computerSelection);
   }
 };
 
-//computer choice from random number.adds active class
 const getComputerChoice = () => {
   const iconsArray = ["rock", "paper", "scissors"];
-  let randomNumber = Math.floor(Math.random() * computerIcons.length);
-  console.log(randomNumber);
-  computerIcons[randomNumber].classList.add("active");
-  computerSelection = iconsArray[randomNumber];
-  console.log({ computerSelection });
-  return computerSelection;
-};
-
-//remove active class from computer icons.When Player clicks Icon it removes active class from computer icons and invoked computerChoice adds active class.
-const removeActiveComputer = () => {
   for (const card of playerIcons) {
     card.addEventListener("click", () => {
-      computerIcons.forEach((el) => {
-        el.classList.remove("active");
-      });
-      getComputerChoice();
+      removeActiveComputer();
+      let randomNumber = Math.floor(Math.random() * computerIcons.length);
+      console.log(randomNumber);
+      computerIcons[randomNumber].classList.add("active");
+      computerSelection = iconsArray[randomNumber];
+      console.log({ computerSelection });
+      playRound(computerSelection);
     });
   }
 };
-//listening when player clicks icon, removes active from computer and adds new class active again with invoking computerChoice
+getComputerChoice();
+const playRound = (playerSelection, computerSelection) => {
+  compareScores(playerSelection, computerSelection);
+};
 const compareScores = (playerSelection, computerSelection) => {
   console.log("1", playerSelection, "2", computerSelection);
-  let result;
+
   if (playerSelection === computerSelection) {
-    result = "result is equal. Tie";
+    result = "The Result is equal. Tie";
   } else if (playerSelection === "rock" && computerSelection === "paper") {
     computerScore++;
     computer.innerText = `Computer score ${computerScore}`;
-    result = "Paper covers rock.Computer WON";
+    result = "The Paper covers the Rock. Computer WON";
   } else if (playerSelection === "rock" && computerSelection === "scissors") {
     playerScore++;
     player.innerText = `Player score ${playerScore}`;
-    result = "scissors can't cut rock. You WON";
+    result = "The Scissors can't cut the Rock. Player WON";
   } else if (playerSelection === "paper" && computerSelection === "rock") {
     playerScore++;
     player.innerText = `Player score ${playerScore}`;
-    result = "Paper covers rock.Computer WON";
+    result = "The Paper covers the Rock. Player WON";
   } else if (playerSelection === "paper" && computerSelection === "scissors") {
     computerScore++;
     computer.innerText = `Computer score ${computerScore}`;
-    result = "Scissors cuts paper.Computer WON";
+    result = "The Scissors cuts the Paper. Computer WON";
   } else if (playerSelection === "scissors" && computerSelection === "rock") {
     computerScore++;
     computer.innerText = `Computer score ${computerScore}`;
-    result = "Scissors can not cut the paper.Computer WON";
+    result = "The Scissors can't cut the Paper. Computer WON";
   } else if (playerSelection === "scissors" && computerSelection === "paper") {
     playerScore++;
     player.innerText = `Player score ${playerScore}`;
-    result = "Scissors cuts the paper. You WON";
+    result = "The Scissors cuts the Paper. Player WON";
   } else {
     return;
   }
-  return (messageDisplay.innerText = result);
+  console.log((messageDisplay.innerText = result));
+  messageDisplay.innerText = result;
+  return gameEnd();
 };
-//in this function need to get result from getPlayerChoice and getComputerChoice
-const playGame = () => {
-  //for (let i = 0; i < 5; i++) {
-  removeActiveComputer();
-  const choice1 = "rock"; //need assign player choice
 
-  const choice2 = "paper"; //ned assign computer choice
-  compareScores(choice1, choice2);
-  //}
-};
-console.log(playGame());
+for (let i = 0; i < playerIcons.length; i++) {
+  playerIcons[i].addEventListener("click", (e) => getPlayerChoice(e, i));
+}
+resetBtn.addEventListener("click", resetGame);
+const gameEnd = () => {
+  if (playerScore === 5) {
+    userChoice = false;
 
-const startGame = () => {
-  removeActivePlayer();
+    return (messageDisplay.innerText = `Player Beats Computer`);
+  } else if (computerScore === 5) {
+    userChoice = false;
+
+    return (messageDisplay.innerText = `Computer Won. Let's try again`);
+  }
 };
-startGame();
+//console.log(gameEnd());
