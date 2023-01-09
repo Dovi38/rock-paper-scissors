@@ -13,6 +13,8 @@ let playerSelection;
 let computerSelection;
 let result = "";
 let userChoice = true;
+let click = true;
+playerIcons.disabled = false;
 
 //remove active class from player
 const removeActivePlayer = () => {
@@ -26,21 +28,29 @@ const removeActiveComputer = () => {
     elem.classList.remove("active");
   });
 };
+const stopClick = () => {
+  for (const card of playerIcons) {
+    card.removeEventListener("click", getComputerChoice);
+  }
+};
 
 const resetGame = () => {
   removeActivePlayer();
   removeActiveComputer();
   messageDisplay.innerText = "Let's play again";
+  computer.innerText = "Computer score: 0";
+  player.innerText = "Player score: 0";
   playerScore = 0;
   computerScore = 0;
   playerSelection;
   computerSelection;
   result = "";
   userChoice = true;
-  computer.innerText = "Computer score: 0";
-  player.innerText = "Player score: 0";
+  for (const card of playerIcons) {
+    card.addEventListener("click", getComputerChoice);
+  }
 };
-
+resetBtn.addEventListener("click", resetGame);
 //player's clicked icon
 const getPlayerChoice = (e, i) => {
   if (userChoice) {
@@ -56,14 +66,16 @@ const getPlayerChoice = (e, i) => {
       playerSelection = "scissors";
     }
     console.log({ playerSelection });
+
     compareScores(playerSelection, computerSelection);
   }
 };
 
-const getComputerChoice = () => {
+/*const getComputerChoice = () => {
   const iconsArray = ["rock", "paper", "scissors"];
   for (const card of playerIcons) {
-    card.addEventListener("click", () => {
+    card.addEventListener("click", (e) => {
+      console.log(`card was clicked ${e}`);
       removeActiveComputer();
       let randomNumber = Math.floor(Math.random() * computerIcons.length);
       console.log(randomNumber);
@@ -74,7 +86,20 @@ const getComputerChoice = () => {
     });
   }
 };
-getComputerChoice();
+getComputerChoice();*/
+const getComputerChoice = () => {
+  const iconsArray = ["rock", "paper", "scissors"];
+  removeActiveComputer();
+  let randomNumber = Math.floor(Math.random() * computerIcons.length);
+  console.log(randomNumber);
+  computerIcons[randomNumber].classList.add("active");
+  computerSelection = iconsArray[randomNumber];
+  console.log({ computerSelection });
+  playRound(computerSelection);
+};
+for (const card of playerIcons) {
+  card.addEventListener("click", getComputerChoice);
+}
 const playRound = (playerSelection, computerSelection) => {
   compareScores(playerSelection, computerSelection);
 };
@@ -118,16 +143,14 @@ const compareScores = (playerSelection, computerSelection) => {
 for (let i = 0; i < playerIcons.length; i++) {
   playerIcons[i].addEventListener("click", (e) => getPlayerChoice(e, i));
 }
-resetBtn.addEventListener("click", resetGame);
 const gameEnd = () => {
   if (playerScore === 5) {
     userChoice = false;
-
+    stopClick();
     return (messageDisplay.innerText = `Player Beats Computer`);
   } else if (computerScore === 5) {
     userChoice = false;
-
+    stopClick();
     return (messageDisplay.innerText = `Computer Won. Let's try again`);
   }
 };
-//console.log(gameEnd());
