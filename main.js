@@ -150,12 +150,12 @@ const gameEnd = () => {
   if (playerScore === 5) {
     userChoice = false;
     stopClick();
-    messageDisplay.style.color = "red";
+    messageDisplay.style.color = "#d4af37";
     return (messageDisplay.innerText = `Player Beats Computer!`);
   } else if (computerScore === 5) {
     userChoice = false;
     stopClick();
-    messageDisplay.style.color = "red";
+    messageDisplay.style.color = "#d4af37";
     return (messageDisplay.innerText = `Computer Beats Player!`);
   }
 };
