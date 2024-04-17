@@ -5,7 +5,7 @@ const messageDisplay = document.querySelector(".message");
 const player = document.querySelector(".player");
 const computer = document.querySelector(".computer");
 const text = document.querySelector(".text");
-const resetBtn = document.querySelector(".resetBtn");
+const resetBtn = document.querySelector("#resetBtn");
 
 let playerScore = 0;
 let computerScore = 0;
@@ -38,7 +38,7 @@ const resetGame = () => {
   removeActivePlayer();
   removeActiveComputer();
   messageDisplay.innerText = "Let's play again";
-  messageDisplay.style.color = "black";
+  messageDisplay.style.color = "#d4af37";
   computer.innerText = "Computer score: 0";
   player.innerText = "Player score: 0";
   playerScore = 0;
